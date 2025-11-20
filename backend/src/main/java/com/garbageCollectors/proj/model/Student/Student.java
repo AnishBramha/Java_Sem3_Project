@@ -1,4 +1,4 @@
-package com.garbageCollectors.proj.repo.Student;
+package com.garbageCollectors.proj.model.Student;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

@@ -1,4 +1,4 @@
-package com.garbageCollectors.proj.repo.Student;
+package com.garbageCollectors.proj.model.Student;
 
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -11,6 +11,8 @@ public interface StudentRepo extends MongoRepository<Student, String> {
 
     Optional<Student> findByEmail(String email);
 }
+
+
 
 
 

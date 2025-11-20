@@ -1,6 +1,6 @@
 package com.garbageCollectors.proj.controller.Archived;
 
-import com.garbageCollectors.proj.repo.Archived.ArchivedRepo;
+import com.garbageCollectors.proj.model.Archived.ArchivedRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

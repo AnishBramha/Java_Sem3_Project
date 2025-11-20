@@ -1,7 +1,7 @@
 package com.garbageCollectors.proj.controller.Student;
 
-import com.garbageCollectors.proj.repo.Student.Student;
-import com.garbageCollectors.proj.repo.Student.StudentRepo;
+import com.garbageCollectors.proj.model.Student.Student;
+import com.garbageCollectors.proj.model.Student.StudentRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
