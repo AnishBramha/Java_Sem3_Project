@@ -14,5 +14,6 @@ public class ReturnResponseDTO {
     private LocalDateTime timestamp;
     private String deliveryCompany;
     private String name;
+    private String status;
     private List<String> phoneNumbers;
 }
