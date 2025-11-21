@@ -18,14 +18,21 @@ export default function Home() {
     setParticles(p)
   }, [])
 
-  const login = () => {
-      localStorage.setItem("userProfile", JSON.stringify({
-        name: "Rahul Sharma",
-        email: "rahul.sharma@iiitb.ac.in",
-        rollNumber: "IMT2021001"
-      }))
-      window.location.href = "/student"
-  }
+const login = () => {
+  const clientId = import.meta.env.VITE_MS_CLIENT_ID;
+  const tenantId = import.meta.env.VITE_MS_TENANT_ID;
+  const redirectUri = import.meta.env.VITE_MS_REDIRECT_URI;
+
+  const authUrl = 
+    `https://login.microsoftonline.com/common/oauth2/v2.0/authorize` +
+    `?client_id=${clientId}` +
+    `&response_type=code` +
+    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+    `&response_mode=query` +
+    `&scope=openid profile email`;
+
+  window.location.href = authUrl;
+};
 
 
   const loginGuard = () => {
