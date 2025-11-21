@@ -53,4 +53,20 @@ public class ReturnController {
         this.returnRepo.save(item);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/search")
+    public ResponseEntity<ReturnResponseDTO> findReturnPackage(@RequestParam String email){
+        if(this.returnRepo.findByEmail(email)==null){
+            return ResponseEntity.notFound().build();
+        }
+        Return item= this.returnRepo.findByEmail(email);
+        ReturnResponseDTO response = ReturnResponseDTO.builder()
+                .id(item.getId())
+                .status(item.getStatus())
+                .email(item.getEmail())
+                .name(item.getName())
+                .phoneNumbers(item.getPhoneNumbers())
+                .timestamp(item.getTimestamp())
+                .deliveryCompany(item.getDeliveryCompany()).build();
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
 }
