@@ -1,10 +1,7 @@
 package com.garbageCollectors.proj.controller.Guard;
 
-import com.garbageCollectors.proj.controller.Student.StudentRequestDTO;
-import com.garbageCollectors.proj.controller.Student.StudentResponseDTO;
 import com.garbageCollectors.proj.model.Guard.Guard;
 import com.garbageCollectors.proj.model.Guard.GuardRepo;
-import com.garbageCollectors.proj.model.Student.Student;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
