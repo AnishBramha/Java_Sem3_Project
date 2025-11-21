@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @Builder
 @NoArgsConstructor
@@ -24,6 +25,9 @@ public class Return {
 
     private String name;
     private List<String> phoneNumbers;
+    private String status;
+    private LocalDateTime timestamp;
+    private String deliveryCompany;
 
     @JsonIgnore
     private String accessToken;

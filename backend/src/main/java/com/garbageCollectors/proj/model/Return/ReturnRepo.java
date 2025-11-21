@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ReturnRepo extends MongoRepository<Return, String> {
-    Optional<Return> findByEmail(String email);
-
+    Return findByEmail(String email);
+    void deleteByEmail(String email);
 }
