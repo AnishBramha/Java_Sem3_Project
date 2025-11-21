@@ -18,6 +18,12 @@ import java.util.Optional;
 @Service
 public class Admin {
 
+    @Id
+    private String id;
+    private String username;
+    private String password;
+
+
     @Autowired
     private AdminRepo adminRepository;
 
