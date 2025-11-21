@@ -18,12 +18,12 @@ public class StudentController {
 
     private final StudentRepo studentRepo;
 
-    @PatchMapping("/addPhoneNumbers/{id}")
+    @PatchMapping("/addPhoneNumbers")
     public ResponseEntity<StudentResponseDTO> updateStudentByPhoneNumber(
-            @PathVariable String id,
+            @RequestParam String email,
             @RequestBody StudentRequestDTO request) {
 
-        Optional<Student> maybeStudent = this.studentRepo.findById(id);
+        Optional<Student> maybeStudent = this.studentRepo.findByEmail(email);
 
         if (maybeStudent.isEmpty())
             return ResponseEntity.notFound().build();
