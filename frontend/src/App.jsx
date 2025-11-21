@@ -5,6 +5,7 @@ import  AdminDashboard  from "./pages/AdminDashboard.jsx"
 import  GuardDashboard  from "./pages/GuardDashboard.jsx"
 import  AdminLogin  from "./pages/AdminLogin.jsx"
 import  GuardLogin  from "./pages/GuardLogin.jsx"
+import  LoginSuccess  from "./pages/LoginSuccess.jsx"
 import StudentMyPackages from "./pages/StudentMyPackages.jsx"
 import StudentOldPackages from "./pages/StudentOldPackages.jsx"
 import StudentProfile from "./pages/StudentProfile.jsx"
@@ -18,7 +19,7 @@ export const App = () => {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        
+        <Route path="/login/success" element={<LoginSuccess />} />        
         <Route path="/student" element={<StudentDashboard />}>
           <Route path="" element={<StudentMyPackages />} />
           <Route path="MyPackages" element={<StudentMyPackages />} />
