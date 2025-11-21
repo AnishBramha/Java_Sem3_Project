@@ -8,10 +8,19 @@ import com.garbageCollectors.proj.model.Student.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.Optional;
 
 @Service
 public class Admin {
+
+    @Autowired
+    private AdminRepo adminRepository;
+
     @Autowired
     private StudentRepo studentRepository;
 
@@ -22,28 +31,40 @@ public class Admin {
 //    @Autowired
 //    private PasswordEncoder encoder
 
-    public AdminResponseDTO authenticateAdmin(AdminRequestDTO request) {
+    public AdminResponseDTO authenticateAdmin(@RequestBody AdminRequestDTO request) {
         /*TODO: Login and Validation to be done here and token*/
+        Optional<Admin> adminUserOptional = adminRepository.findByUsername(request.getUsername());
+
+        if(adminUserOptional.isEmpty()) {
+            throw new RuntimeException("Invalid Credentials.");
+        }
+
+        Admin adminUser = adminUserOptional.get();
+
+        /* TODO: Check if password matches or not, if not throw error */
+
         AdminResponseDTO response = new AdminResponseDTO();
         response.setMessage("Admin login Successful");
+        response.setRole("ROLE_ADMIN");
         return response;
     }
 
-    public AdminResponseDTO authenticateGuard(AdminRequestDTO request) {
+    public AdminResponseDTO authenticateGuard(@RequestBody AdminRequestDTO request) {
         /*TODO: authentication and token*/
+        /*TODO: Guard is not set so do later*/
         AdminResponseDTO response = new AdminResponseDTO();
         response.setMessage("Guard Login Successful");
         return response;
     }
 
-    public Guard addGuard(AdminRequestDTO request) {
-        /* Some checks here */
+    public Guard addGuard(@RequestBody  AdminRequestDTO request) {
+        /* TODO: Some checks here */
         Guard newGuard = new Guard();
-        /*Set Fields and return*/
+        /* TODO: Set Fields and return*/
         return newGuard;
     }
 
-    public void deleteGuard(String guardID) {
+    public void deleteGuard(@PathVariable String guardID) {
 
     }
 
