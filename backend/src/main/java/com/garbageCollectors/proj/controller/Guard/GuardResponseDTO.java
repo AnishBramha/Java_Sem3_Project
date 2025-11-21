@@ -7,5 +7,11 @@ import lombok.Data;
 @Builder
 public class GuardResponseDTO {
 
-    
+    private String id;
+    private String name;
+    private String pswd;
 }
+
+
+
+
