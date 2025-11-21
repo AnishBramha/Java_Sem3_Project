@@ -3,7 +3,6 @@ package com.garbageCollectors.proj.controller.Return;
 import com.garbageCollectors.proj.model.Return.Return;
 import com.garbageCollectors.proj.model.Return.ReturnRepo;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +16,21 @@ public class ReturnController {
     private final ReturnRepo returnRepo;
     @PostMapping("/add")
     public ResponseEntity<ReturnResponseDTO> addReturnItem(@RequestBody ReturnRequestDTO request){
-        Return newReturnPackage = Return.builder().email(request.getEmail()).name(request.getName()).status("pending")
-                .phoneNumbers(request.getPhoneNumbers()).timestamp(LocalDateTime.now()).deliveryCompany(request.getDeliveryCompany())
+        Return newReturnPackage = Return.builder().email(request.getEmail())
+                .name(request.getName()).status("pending")
+                .phoneNumbers(request.getPhoneNumbers()).
+                timestamp(LocalDateTime.now())
+                .deliveryCompany(request.getDeliveryCompany())
                 .accessToken("123").refreshToken("456").build();
 
         Return returnedPackage = this.returnRepo.save(newReturnPackage);
 
-        ReturnResponseDTO response = ReturnResponseDTO.builder().id(returnedPackage.getId()).status(returnedPackage.getStatus()).email(returnedPackage.getEmail()).name(returnedPackage.getName())
-                .phoneNumbers(returnedPackage.getPhoneNumbers()).timestamp(returnedPackage.getTimestamp()).deliveryCompany(returnedPackage.getDeliveryCompany()).build();
+        ReturnResponseDTO response = ReturnResponseDTO.builder().
+                id(returnedPackage.getId()).status(returnedPackage.getStatus())
+                .email(returnedPackage.getEmail()).name(returnedPackage.getName())
+                .phoneNumbers(returnedPackage.getPhoneNumbers())
+                .timestamp(returnedPackage.getTimestamp())
+                .deliveryCompany(returnedPackage.getDeliveryCompany()).build();
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -37,5 +43,14 @@ public class ReturnController {
         return ResponseEntity.noContent().build();
 
     }
-    
+    @PatchMapping("/rejected")
+    public ResponseEntity<Void> returnRejected(@RequestParam String email){
+        if(this.returnRepo.findByEmail(email)==null){
+            return ResponseEntity.notFound().build();
+        }
+        Return item= this.returnRepo.findByEmail(email);
+        item.setStatus("rejected");
+        this.returnRepo.save(item);
+        return ResponseEntity.ok().build();
+    }
 }
