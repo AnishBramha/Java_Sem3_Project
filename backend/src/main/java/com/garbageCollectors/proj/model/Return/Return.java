@@ -19,8 +19,6 @@ import java.util.List;
 public class Return {
     @Id
     private String id;
-
-    @Indexed(unique = true)
     private String email;
 
     private String name;
@@ -28,10 +26,4 @@ public class Return {
     private String status;
     private LocalDateTime timestamp;
     private String deliveryCompany;
-
-    @JsonIgnore
-    private String accessToken;
-
-    @JsonIgnore
-    private String refreshToken;
 }
