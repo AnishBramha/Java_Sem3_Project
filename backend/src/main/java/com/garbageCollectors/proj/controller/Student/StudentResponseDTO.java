@@ -10,10 +10,10 @@ import java.util.List;
 public class StudentResponseDTO {
 
     private String id;
-    private String email;
-    private String name;
-    private List<String> phoneNumbers;
+    private String token;
 }
+
+
 
 
 

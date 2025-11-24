@@ -5,6 +5,8 @@
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/controller/Archived/ArchivedController.java
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/controller/Archived/ArchivedRequestDTO.java
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/controller/Archived/ArchivedResponseDTO.java
+/Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/controller/Auth/AuthController.java
+/Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/controller/Auth/AuthRequestDTO.java
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/controller/Guard/GuardController.java
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/controller/Guard/GuardRequestDTO.java
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/controller/Guard/GuardResponseDTO.java
@@ -29,3 +31,5 @@
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/model/Return/ReturnRepo.java
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/model/Student/Student.java
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/model/Student/StudentRepo.java
+/Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/service/JWTService.java
+/Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/service/MsAuthService.java
