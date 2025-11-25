@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -51,6 +52,13 @@ public class AuthController {
         String roll = parts[0];
         String name = parts.length > 1 ? parts[1] : "";
         String role = "STUDENT";
+
+
+        Optional<Student> maybeStudent = this.studentRepo.findByEmail(email);
+        if (maybeStudent.isEmpty()) {
+            Student student = Student.builder().email(email).name(name).build();
+            Student savedStudent = this.studentRepo.save(student);
+        }
 
         String jwt = jwtService.createToken(email, role);
 

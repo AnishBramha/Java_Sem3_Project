@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/Main.java
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/controller/Admin/AdminController.java
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/controller/Admin/AdminRequestDTO.java
@@ -33,3 +34,40 @@
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/model/Student/StudentRepo.java
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/service/JWTService.java
 /Users/anish/Developer/Academics/Java/Course/proj/backend/src/main/java/com/garbageCollectors/proj/service/MsAuthService.java
+=======
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/Main.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Admin/AdminController.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Admin/AdminRequestDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Admin/AdminResponseDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Archived/ArchivedController.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Archived/ArchivedRequestDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Archived/ArchivedResponseDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Auth/AuthController.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Auth/AuthRequestDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Guard/GuardController.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Guard/GuardRequestDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Guard/GuardResponseDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Package/PackageController.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Package/PackageRequestDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Package/PackageResponseDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Return/ReturnController.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Return/ReturnRequestDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Return/ReturnResponseDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Student/StudentController.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Student/StudentRequestDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/controller/Student/StudentResponseDTO.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/model/Admin/Admin.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/model/Admin/AdminRepo.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/model/Archived/Archived.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/model/Archived/ArchivedRepo.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/model/Guard/Guard.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/model/Guard/GuardRepo.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/model/Package/Package.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/model/Package/PackageRepo.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/model/Return/Return.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/model/Return/ReturnRepo.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/model/Student/Student.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/model/Student/StudentRepo.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/service/JWTService.java
+/home/aryan-sharma/Desktop/Java_Sem3_Project/backend/src/main/java/com/garbageCollectors/proj/service/MsAuthService.java
+>>>>>>> f60e843 (Changed Auth Controller, synced database)
