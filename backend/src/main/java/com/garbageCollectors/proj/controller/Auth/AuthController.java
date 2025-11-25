@@ -3,6 +3,7 @@ package com.garbageCollectors.proj.controller.Auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.garbageCollectors.proj.model.Student.StudentRepo;
 import com.garbageCollectors.proj.model.Student.Student;
+import com.garbageCollectors.proj.service.EmailService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.garbageCollectors.proj.service.MsAuthService;
 import com.garbageCollectors.proj.service.JWTService;
 import com.fasterxml.jackson.databind.JsonNode;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -32,6 +34,9 @@ public class AuthController {
     private final StudentRepo studentRepo;
     private final MsAuthService msAuthService;
     private final JWTService jwtService;
+
+    private final EmailService emailService;
+
 
 
     @Autowired
@@ -100,6 +105,15 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
         }
     }
+
+    @GetMapping("/send-email")
+    public ResponseEntity<String> sendEmail(@RequestParam String email, @RequestParam String subject, @RequestParam String body) {
+
+        emailService.sendMail(email, subject, body);
+
+        return ResponseEntity.ok("Sent");
+    }
+
 }
 
 
