@@ -1,5 +1,6 @@
 package com.garbageCollectors.proj.model.Guard;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,8 @@ public class Guard {
     private String id;
 
     private String name;
+
+    @JsonIgnore
     private String pswd;
 }
 

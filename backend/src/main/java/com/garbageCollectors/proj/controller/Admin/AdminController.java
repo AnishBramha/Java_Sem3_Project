@@ -1,5 +1,7 @@
 package com.garbageCollectors.proj.controller.Admin;
 
+import com.garbageCollectors.proj.controller.Guard.GuardRequestDTO;
+import com.garbageCollectors.proj.controller.Guard.GuardResponseDTO;
 import com.garbageCollectors.proj.model.Admin.Admin;
 import com.garbageCollectors.proj.model.Admin.AdminRepo;
 import com.garbageCollectors.proj.model.Guard.Guard;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -54,12 +58,8 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> adminLogin(@RequestHeader("Authorization") String authHeader, @RequestBody AdminRequestDTO request) {
-        ResponseEntity<?> errorResponse = verifyTokenAndGetErrorResponse(authHeader, "ROLE_ADMIN");
-        if (errorResponse != null) {
-            return errorResponse; // Stops execution and returns 401/403 error
-        }
 
         try {
             AdminResponseDTO response = adminService.authenticateAdmin(request);
@@ -70,9 +70,9 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/addGuard")
-    public ResponseEntity<?> addGuard(@RequestHeader("Authorization") String authHeader, @RequestBody AdminRequestDTO request) {
-        ResponseEntity<?> errorResponse = verifyTokenAndGetErrorResponse(authHeader, "ROLE_ADMIN");
+    @PostMapping("/addGuard")
+    public ResponseEntity<?> addGuard(@RequestHeader("Authorization") String authHeader, @RequestBody GuardRequestDTO request) {
+        ResponseEntity<?> errorResponse = verifyTokenAndGetErrorResponse(authHeader, "ADMIN");
         if (errorResponse != null) {
             return errorResponse; // Stops execution and returns 401/403 error
         }
@@ -87,7 +87,7 @@ public class AdminController {
 
     @DeleteMapping("/delGuard/{guardId}")
     public ResponseEntity<?> deleteGuard(@RequestHeader("Authorization") String authHeader, @PathVariable String guardId) {
-        ResponseEntity<?> errorResponse = verifyTokenAndGetErrorResponse(authHeader, "ROLE_ADMIN");
+        ResponseEntity<?> errorResponse = verifyTokenAndGetErrorResponse(authHeader, "ADMIN");
         if (errorResponse != null) {
             return errorResponse; // Stops execution and returns 401/403 error
         }
@@ -98,6 +98,22 @@ public class AdminController {
         catch (RuntimeException ex) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/listGuards")
+    public ResponseEntity<?> listGuards(@RequestHeader("Authorization") String authHeader) {
+        ResponseEntity<?> errorResponse = verifyTokenAndGetErrorResponse(authHeader, "ADMIN");
+        if(errorResponse != null) {
+            return errorResponse;
+        }
+        try {
+            List<Guard> guards = adminService.listMyGuards();
+            return ResponseEntity.ok(guards);
+        }
+        catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
 
