@@ -1,5 +1,6 @@
 package com.garbageCollectors.proj.controller.Admin;
 
+import com.garbageCollectors.proj.controller.Guard.GuardRequestDTO;
 import com.garbageCollectors.proj.controller.Guard.GuardResponseDTO;
 import com.garbageCollectors.proj.model.Admin.Admin;
 import com.garbageCollectors.proj.model.Admin.AdminRepo;
@@ -70,7 +71,7 @@ public class AdminController {
     }
 
     @PostMapping("/addGuard")
-    public ResponseEntity<?> addGuard(@RequestHeader("Authorization") String authHeader, @RequestBody AdminRequestDTO request) {
+    public ResponseEntity<?> addGuard(@RequestHeader("Authorization") String authHeader, @RequestBody GuardRequestDTO request) {
         ResponseEntity<?> errorResponse = verifyTokenAndGetErrorResponse(authHeader, "ADMIN");
         if (errorResponse != null) {
             return errorResponse; // Stops execution and returns 401/403 error

@@ -2,6 +2,7 @@ package com.garbageCollectors.proj.model.Admin;
 
 import com.garbageCollectors.proj.controller.Admin.AdminRequestDTO;
 import com.garbageCollectors.proj.controller.Admin.AdminResponseDTO;
+import com.garbageCollectors.proj.controller.Guard.GuardRequestDTO;
 import com.garbageCollectors.proj.model.Guard.Guard;
 import com.garbageCollectors.proj.model.Guard.GuardRepo;
 import com.garbageCollectors.proj.model.Student.StudentRepo;
@@ -21,14 +22,11 @@ import java.util.Optional;
 @Service
 public class Admin {
 
-    @Id
-    private String id;
-    private String username;
-    private String password;
+    private String username = "Admin";
+    private String password = "123";
 
 
-    @Autowired
-    private AdminRepo adminRepository;
+
 
     @Autowired
     private StudentRepo studentRepository;
@@ -44,20 +42,13 @@ public class Admin {
 
     public AdminResponseDTO authenticateAdmin(AdminRequestDTO request) {
         /*TODO: Login and Validation to be done here and token*/
-        Optional<Admin> adminUserOptional = adminRepository.findByUsername(request.getUsername());
-
-        if(adminUserOptional.isEmpty()) {
-            throw new RuntimeException("Invalid Credentials.");
-        }
-
-        Admin adminUser = adminUserOptional.get();
 
         /* TODO: Check if password matches or not, if not throw error */
-        if(!request.getPassword().equals(adminUser.password)) {
+        if(!request.getPassword().equals(password) || !request.getUsername().equals(username)) {
             throw new RuntimeException("Invalid Credentials.");
         }
 
-        String username = adminUser.username;
+
         String role = "ADMIN";
 
         String token = jwtService.createToken(username, role);
@@ -77,13 +68,12 @@ public class Admin {
         return response;
     }
 
-    public Guard addGuard(AdminRequestDTO request) {
+    public Guard addGuard(GuardRequestDTO request) {
         /* TODO: Some checks here */
         Guard newGuard = new Guard();
         /* TODO: Set Fields and return*/
-        newGuard.setId(request.getEmployeeID());
         newGuard.setName(request.getName());
-        newGuard.setPswd(request.getPassword());
+        newGuard.setPswd(request.getPswd());
         guardRepository.save(newGuard);
         return newGuard;
     }
