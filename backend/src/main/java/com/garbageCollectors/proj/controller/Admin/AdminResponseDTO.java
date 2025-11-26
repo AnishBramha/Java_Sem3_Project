@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class AdminResponseDTO {
     private String message;
     private String role; // Either Admin or Guard
+    private String token;
 }

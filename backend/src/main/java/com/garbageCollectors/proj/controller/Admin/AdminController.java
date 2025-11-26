@@ -56,10 +56,6 @@ public class AdminController {
 
     @PutMapping("/login")
     public ResponseEntity<?> adminLogin(@RequestHeader("Authorization") String authHeader, @RequestBody AdminRequestDTO request) {
-        ResponseEntity<?> errorResponse = verifyTokenAndGetErrorResponse(authHeader, "ROLE_ADMIN");
-        if (errorResponse != null) {
-            return errorResponse; // Stops execution and returns 401/403 error
-        }
 
         try {
             AdminResponseDTO response = adminService.authenticateAdmin(request);
@@ -70,7 +66,7 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/addGuard")
+    @PostMapping("/addGuard")
     public ResponseEntity<?> addGuard(@RequestHeader("Authorization") String authHeader, @RequestBody AdminRequestDTO request) {
         ResponseEntity<?> errorResponse = verifyTokenAndGetErrorResponse(authHeader, "ROLE_ADMIN");
         if (errorResponse != null) {

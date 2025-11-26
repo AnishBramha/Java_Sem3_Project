@@ -52,10 +52,20 @@ public class Admin {
         Admin adminUser = adminUserOptional.get();
 
         /* TODO: Check if password matches or not, if not throw error */
+        if(!request.getPassword().equals(adminUser.password)) {
+            throw new RuntimeException("Invalid Credentials.");
+        }
+
+        String username = adminUser.username;
+        String password = adminUser.password;
+
+        String token = jwtService.createToken(username, password);
+
 
         AdminResponseDTO response = new AdminResponseDTO();
         response.setMessage("Admin login Successful");
         response.setRole("ROLE_ADMIN");
+        response.setToken(token);
         return response;
     }
 
@@ -71,6 +81,9 @@ public class Admin {
         /* TODO: Some checks here */
         Guard newGuard = new Guard();
         /* TODO: Set Fields and return*/
+//        newGuard.setId(request.getEmployeeID());
+//        newGuard.setName(request.getName());
+//        newGuard
         return newGuard;
     }
 
