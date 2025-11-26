@@ -42,7 +42,7 @@ public class Admin {
     private JWTService jwtService;
 
 
-    public AdminResponseDTO authenticateAdmin(@RequestBody AdminRequestDTO request) {
+    public AdminResponseDTO authenticateAdmin(AdminRequestDTO request) {
         /*TODO: Login and Validation to be done here and token*/
         Optional<Admin> adminUserOptional = adminRepository.findByUsername(request.getUsername());
 
@@ -69,7 +69,7 @@ public class Admin {
         return response;
     }
 
-    public AdminResponseDTO authenticateGuard(@RequestBody AdminRequestDTO request) {
+    public AdminResponseDTO authenticateGuard(AdminRequestDTO request) {
         /*TODO: authentication and token*/
         /*TODO: Guard is not set so do later*/
         AdminResponseDTO response = new AdminResponseDTO();
@@ -77,7 +77,7 @@ public class Admin {
         return response;
     }
 
-    public Guard addGuard(@RequestBody  AdminRequestDTO request) {
+    public Guard addGuard(AdminRequestDTO request) {
         /* TODO: Some checks here */
         Guard newGuard = new Guard();
         /* TODO: Set Fields and return*/
@@ -88,15 +88,16 @@ public class Admin {
         return newGuard;
     }
 
-    public void deleteGuard(@PathVariable String guardID) {
+    public void deleteGuard(String guardID) {
         if(!guardRepository.existsById(guardID)) {
             throw new RuntimeException("Guard not found!");
         }
         guardRepository.deleteById(guardID);
     }
 
-    public List<String> listMyGuards() {
-        guardRepository.
+    public List<Guard> listMyGuards() {
+        List<Guard> guards = guardRepository.findAll();
+        return guards;
     }
 
 

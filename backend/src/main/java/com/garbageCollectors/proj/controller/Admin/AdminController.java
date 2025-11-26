@@ -57,7 +57,7 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> adminLogin(@RequestHeader("Authorization") String authHeader, @RequestBody AdminRequestDTO request) {
 
         try {
@@ -106,7 +106,11 @@ public class AdminController {
             return errorResponse;
         }
         try {
-            adminService
+            List<Guard> guards = adminService.listMyGuards();
+            return ResponseEntity.ok(guards);
+        }
+        catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
 
     }
