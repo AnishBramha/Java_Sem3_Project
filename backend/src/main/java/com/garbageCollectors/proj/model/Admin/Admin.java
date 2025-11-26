@@ -57,7 +57,7 @@ public class Admin {
         }
 
         String username = adminUser.username;
-        String role = "ADMIN"
+        String role = "ADMIN";
 
         String token = jwtService.createToken(username, role);
 
