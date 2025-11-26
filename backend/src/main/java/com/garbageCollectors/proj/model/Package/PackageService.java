@@ -57,11 +57,6 @@ public class PackageService {
             criteriaList.add(Criteria.where("deliveredTnD").lte(maxDelivered));
         }
 
-        Criteria finalCriteria =
-                criteriaList.isEmpty()
-                        ? new Criteria()
-                        : new Criteria().andOperator(criteriaList.toArray(new Criteria[0]));
-
         // Filter: recievedTnD range
         Date minRecieved = parseInstant(params.get("minRecievedAt"));
         Date maxRecieved = parseInstant(params.get("maxRecievedAt"));
