@@ -2,6 +2,7 @@ package com.garbageCollectors.proj.controller.Student;
 
 import com.garbageCollectors.proj.model.Student.Student;
 import com.garbageCollectors.proj.model.Student.StudentRepo;
+import com.garbageCollectors.proj.service.EmailService;
 import com.garbageCollectors.proj.service.JWTService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class StudentController {
 
     private final StudentRepo studentRepo;
     private final JWTService service;
+    private final EmailService emailService;
 
 
     private Claims verifyToken(String authHeader) {
@@ -77,9 +79,11 @@ public class StudentController {
 
             var claims = this.verifyToken(authHeader);
 
-            if (claims.get("role").equals("STUDENT")) {
+            if (claims.get("role").toString().equals("STUDENT")) {
 
                 this.studentRepo.save(newStudent);
+                this.emailService.sendMail("Aryan.Sharma@iiitb.ac.in", "Great stuff!",
+                        "By the way, what mail should we send it to? Extract from the token?");
 
                 return ResponseEntity.ok().build();
             }

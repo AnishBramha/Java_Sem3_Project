@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Document(collection = "packages")
 public class Package {
     @Id
     private String id;
@@ -23,4 +24,10 @@ public class Package {
     private LocalDateTime receivedTnD;
     private String phoneNumber;
     private String deliveryCompany;
+    private String receivedEmail;
 }
+
+
+
+
+
