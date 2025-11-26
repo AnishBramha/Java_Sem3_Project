@@ -14,5 +14,4 @@ public class PackageResponseDTO {
     private LocalDateTime receivedTnD;
     private String phoneNumber;
     private String deliveryCompany;
-
 }

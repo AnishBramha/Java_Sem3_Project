@@ -1,6 +1,7 @@
 package com.garbageCollectors.proj.controller.Package;
 
 import com.garbageCollectors.proj.model.Package.PackageRepo;
+import com.garbageCollectors.proj.model.Package.PackageService;
 import com.garbageCollectors.proj.model.Package.Package;
 import com.garbageCollectors.proj.model.Student.Student;
 import com.garbageCollectors.proj.model.Student.StudentRepo;
@@ -16,6 +17,7 @@ import com.garbageCollectors.proj.service.JWTService;
 import com.garbageCollectors.proj.service.MsAuthService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -26,6 +28,7 @@ public class PackageController {
 
     private final PackageRepo packageRepo;
     private final StudentRepo studentRepo;
+    private final PackageService packageService;
     private final MsAuthService msAuthService;
     private final JWTService jwtService;
     @GetMapping("/getActive") //pageable and authorized
@@ -102,7 +105,7 @@ public class PackageController {
         }
     }
 
-    @GetMapping("/myActive") // only authorized using email
+    @GetMapping("/myActive") // only authorized using email CACHING DUE
     public ResponseEntity<List<PackageResponseDTO>> findMyActivePackages(@RequestHeader("Authorization") String authHeader,@RequestParam String email){
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -148,7 +151,7 @@ public class PackageController {
         }
     }
 
-    @GetMapping("/myCollected")// only authorized using email
+    @GetMapping("/myCollected")// only authorized using email CACHING DUE
     public ResponseEntity<List<PackageResponseDTO>> findMyCollectedPackages(@RequestHeader("Authorization") String authHeader,@RequestParam String email){
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -195,5 +198,72 @@ public class PackageController {
 
     }
 
+    @GetMapping("/getPublic") //pageable and authorized CACHING DUE
+    public ResponseEntity<List<PackageResponseDTO>> findAllPublicPackages(@RequestHeader("Authorization") String authHeader, @RequestBody int page) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        try {
+            String token = authHeader.substring(7);
+            Jws<Claims> data = this.jwtService.verifyToken(token);
+            Claims claims = (Claims) data.getBody();
+            String role = claims.get("role").toString();
+
+            int size = 10;
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+            List<Package> packages = packageRepo.findByStatus("PublicActive", pageable);
+
+
+            List<PackageResponseDTO> response = packages.stream()
+                    .map(p -> new PackageResponseDTO(
+                            p.getId(),
+                            p.getStatus(),
+                            p.getDeliveredTnD(),
+                            p.getReceivedTnD(),
+                            p.getPhoneNumber(),
+                            p.getDeliveryCompany()
+                    ))
+                    .toList();
+
+            return ResponseEntity.ok(response);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
+    @GetMapping("search")
+    public ResponseEntity<List<PackageResponseDTO>> search(@RequestHeader("Authorization") String authHeader,@RequestParam Map<String,String> params){
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        try{
+            String token = authHeader.substring(7);
+            Jws<Claims> data = this.jwtService.verifyToken(token);
+            Claims claims = (Claims) data.getBody();
+            String role = claims.get("role").toString();
+            if(!(role.equals("GUARD")||role.equals("ADMIN"))){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+
+            List<Package> results = packageService.dynamicSearch(params);
+
+            List<PackageResponseDTO> response = results.stream()
+                    .map(p -> new PackageResponseDTO(
+                            p.getId(),
+                            p.getStatus(),
+                            p.getDeliveredTnD(),
+                            p.getReceivedTnD(),
+                            p.getPhoneNumber(),
+                            p.getDeliveryCompany()
+                    ))
+                    .toList();
+
+            return ResponseEntity.ok(response);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
 
 }
