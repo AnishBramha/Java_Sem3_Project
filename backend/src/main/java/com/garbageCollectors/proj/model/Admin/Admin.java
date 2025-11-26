@@ -57,14 +57,13 @@ public class Admin {
         }
 
         String username = adminUser.username;
-        String password = adminUser.password;
+        String role = "ADMIN"
 
-        String token = jwtService.createToken(username, password);
+        String token = jwtService.createToken(username, role);
 
 
         AdminResponseDTO response = new AdminResponseDTO();
         response.setMessage("Admin login Successful");
-        response.setRole("ROLE_ADMIN");
         response.setToken(token);
         return response;
     }
@@ -81,14 +80,18 @@ public class Admin {
         /* TODO: Some checks here */
         Guard newGuard = new Guard();
         /* TODO: Set Fields and return*/
-//        newGuard.setId(request.getEmployeeID());
-//        newGuard.setName(request.getName());
-//        newGuard
+        newGuard.setId(request.getEmployeeID());
+        newGuard.setName(request.getName());
+        newGuard.setPswd(request.getPassword());
+        guardRepository.save(newGuard);
         return newGuard;
     }
 
     public void deleteGuard(@PathVariable String guardID) {
-
+        if(!guardRepository.existsById(guardID)) {
+            throw new RuntimeException("Guard not found!");
+        }
+        guardRepository.deleteById(guardID);
     }
 
 
