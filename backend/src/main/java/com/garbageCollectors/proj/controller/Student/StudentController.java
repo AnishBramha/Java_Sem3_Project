@@ -2,12 +2,13 @@ package com.garbageCollectors.proj.controller.Student;
 
 import com.garbageCollectors.proj.model.Student.Student;
 import com.garbageCollectors.proj.model.Student.StudentRepo;
+import com.garbageCollectors.proj.service.JWTService;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,65 +18,80 @@ import java.util.Optional;
 public class StudentController {
 
     private final StudentRepo studentRepo;
+    private final JWTService service;
 
-    @PatchMapping("/addPhoneNumbers")
-    public ResponseEntity<StudentResponseDTO> updateStudentByPhoneNumber(
-            @RequestParam String email,
-            @RequestBody StudentRequestDTO request) {
 
-        Optional<Student> maybeStudent = this.studentRepo.findByEmail(email);
+    private Claims verifyToken(String authHeader) {
 
-        if (maybeStudent.isEmpty())
-            return ResponseEntity.notFound().build();
+        if (authHeader == null || !authHeader.startsWith("Bearer "))
+            throw new IllegalArgumentException("Missing token");
 
-        Student currentStudent = maybeStudent.get();
+        String token = authHeader.substring(7);
 
-        if (request.getPhoneNumbers() != null) {
-
-            List<String> current = new ArrayList<>(currentStudent.getPhoneNumbers());
-            current.addAll(request.getPhoneNumbers());
-
-            currentStudent.setPhoneNumbers(current);
-        }
-
-        Student savedStudent = this.studentRepo.save(currentStudent);
-
-        StudentResponseDTO response = StudentResponseDTO.builder()
-                .id(savedStudent.getId())
-                .email(savedStudent.getEmail())
-                .name(savedStudent.getName())
-                .phoneNumbers(savedStudent.getPhoneNumbers())
-                .build();
-
-        return ResponseEntity.ok(response);
+        return this.service.verifyToken(token).getBody();
     }
 
+
+    @PatchMapping("/addPhoneNumbers")
+    public ResponseEntity<?> updateStudentByPhoneNumber(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody Student updated) {
+
+        try {
+
+            var claims = this.verifyToken(authHeader);
+
+            Optional<Student> maybeStudent = this.studentRepo.findByEmail(claims.getSubject());
+
+            if (maybeStudent.isEmpty())
+                return ResponseEntity.notFound().build();
+
+            var student = maybeStudent.get();
+
+            if (claims.getSubject().equals(student.getEmail()) && claims.get("role").equals("STUDENT")) {
+
+                student.getPhoneNumbers().addAll(updated.getPhoneNumbers());
+
+                this.studentRepo.save(student);
+
+                return ResponseEntity.ok().build();
+            }
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+        }
+    }
 
 
     // DEBUG
 
     @PostMapping
-    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody StudentRequestDTO request) {
+    public ResponseEntity<?> createStudent(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody Student newStudent) {
 
-        Student student = Student.builder()
-                .email(request.getEmail())
-                .name(request.getName())
-                .phoneNumbers(request.getPhoneNumbers())
-                .accessToken("123")
-                .refreshToken("456")
-                .build();
+        try {
 
-        Student savedStudent = this.studentRepo.save(student);
+            var claims = this.verifyToken(authHeader);
 
-        StudentResponseDTO response = StudentResponseDTO.builder()
-                .id(savedStudent.getId())
-                .email(savedStudent.getEmail())
-                .name(savedStudent.getName())
-                .phoneNumbers(savedStudent.getPhoneNumbers())
-                .build();
+            if (claims.get("role").equals("STUDENT")) {
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+                this.studentRepo.save(newStudent);
+
+                return ResponseEntity.ok().build();
+            }
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+        }
     }
+
 
     @GetMapping
     public List<Student> getAllStudents() {
@@ -84,77 +100,131 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable String id) {
+    public ResponseEntity<?> getStudentById(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable String id) {
 
-        return this.studentRepo.findById(id)
-                .map(student -> StudentResponseDTO.builder()
-                        .id(student.getId())
-                        .email(student.getEmail())
-                        .name(student.getName())
-                        .phoneNumbers(student.getPhoneNumbers())
-                        .build())
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        try {
+
+            var claims = this.verifyToken(authHeader);
+
+            if (claims.get("role").equals("STUDENT")) {
+
+                Optional<Student> maybeStudent = this.studentRepo.findById(id);
+
+                if (maybeStudent.isEmpty())
+                    return ResponseEntity.notFound().build();
+
+                return new ResponseEntity<>(maybeStudent.get(), HttpStatus.OK);
+            }
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+        }
     }
 
     @GetMapping("/search")
-    public ResponseEntity<StudentResponseDTO> getStudentByEmail(@RequestParam String email) {
+    public ResponseEntity<?> getStudentByEmail(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam String email) {
 
-        return this.studentRepo.findByEmail(email)
-                .map(student -> StudentResponseDTO.builder()
-                        .id(student.getId())
-                        .email(student.getEmail())
-                        .name(student.getName())
-                        .phoneNumbers(student.getPhoneNumbers())
-                        .build())
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        try {
+
+            var claims = this.verifyToken(authHeader);
+
+            if (claims.get("role").equals("STUDENT")) {
+
+                Optional<Student> maybeStudent = this.studentRepo.findByEmail(email);
+
+                if (maybeStudent.isEmpty())
+                    return ResponseEntity.notFound().build();
+
+                return new ResponseEntity<>(maybeStudent.get(), HttpStatus.OK);
+            }
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudentResponseDTO> updateStudent(
+    public ResponseEntity<?> updateStudent(
+            @RequestHeader("Authorization") String authHeader,
             @PathVariable String id,
-            @RequestBody StudentRequestDTO request) {
+            @RequestBody Student updatedStudent) {
 
-        Optional<Student> maybeStudent = this.studentRepo.findById(id);
+        try {
 
-        if (maybeStudent.isEmpty())
-            return ResponseEntity.notFound().build();
+            var claims = this.verifyToken(authHeader);
 
-        Student currentStudent = maybeStudent.get();
+            if (claims.get("role").equals("STUDENT")) {
 
-        if (request.getEmail() != null)
-            currentStudent.setEmail(request.getEmail());
+                Optional<Student> maybeStudent = this.studentRepo.findById(id);
 
-        if (request.getName() != null)
-            currentStudent.setName(request.getName());
+                if (maybeStudent.isEmpty())
+                    return ResponseEntity.notFound().build();
 
-        if (request.getPhoneNumbers() != null)
-            currentStudent.setPhoneNumbers(request.getPhoneNumbers());
+                var newStudent = maybeStudent.get();
 
-        Student savedStudent = this.studentRepo.save(currentStudent);
+                if (updatedStudent.getEmail() != null)
+                    newStudent.setEmail(updatedStudent.getEmail());
 
-        StudentResponseDTO response = StudentResponseDTO.builder()
-                .id(savedStudent.getId())
-                .email(savedStudent.getEmail())
-                .name(savedStudent.getName())
-                .phoneNumbers(savedStudent.getPhoneNumbers())
-                .build();
+                if (updatedStudent.getName() != null)
+                    newStudent.setName(updatedStudent.getName());
 
-        return ResponseEntity.ok(response);
+                if (updatedStudent.getPhoneNumbers() != null)
+                    newStudent.setPhoneNumbers(updatedStudent.getPhoneNumbers());
+
+                this.studentRepo.save(newStudent);
+
+                return ResponseEntity.ok().build();
+            }
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable String id) {
+    public ResponseEntity<?> deleteStudent(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable String id) {
 
-        if (!this.studentRepo.existsById(id))
-            return ResponseEntity.notFound().build();
+        try {
 
-        this.studentRepo.deleteById(id);
+            var claims = this.verifyToken(authHeader);
 
-        return ResponseEntity.noContent().build();
+            if (claims.get("role").equals("STUDENT")) {
+
+                if (!this.studentRepo.existsById(id))
+                    return ResponseEntity.notFound().build();
+
+                this.studentRepo.deleteById(id);
+
+                return ResponseEntity.ok().build();
+            }
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+        }
     }
 }
+
+
+
+
 
 
 

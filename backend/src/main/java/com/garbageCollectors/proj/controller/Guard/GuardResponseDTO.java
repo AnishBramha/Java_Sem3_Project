@@ -8,9 +8,10 @@ import lombok.Data;
 public class GuardResponseDTO {
 
     private String id;
-    private String name;
-    private String pswd;
+    private String token;
 }
+
+
 
 
 

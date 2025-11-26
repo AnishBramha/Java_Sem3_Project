@@ -9,9 +9,7 @@ import java.util.List;
 @Builder
 public class StudentRequestDTO {
 
-    private String email;
-    private String name;
-    private List<String> phoneNumbers;
+    private String token;
 }
 
 

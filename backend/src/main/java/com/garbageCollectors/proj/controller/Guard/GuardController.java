@@ -2,6 +2,7 @@ package com.garbageCollectors.proj.controller.Guard;
 
 import com.garbageCollectors.proj.model.Guard.Guard;
 import com.garbageCollectors.proj.model.Guard.GuardRepo;
+import com.garbageCollectors.proj.service.JWTService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class GuardController {
 
     private final GuardRepo guardRepo;
+    private final JWTService service;
 
     @GetMapping("/login")
     public ResponseEntity<GuardResponseDTO> login(@RequestBody GuardRequestDTO request) {
@@ -31,8 +33,7 @@ public class GuardController {
 
             GuardResponseDTO response = GuardResponseDTO.builder()
                     .id(guard.getId())
-                    .name(guard.getName())
-                    .pswd(guard.getPswd())
+                    .token(service.createToken(guard.getName(), "GUARD"))
                     .build();
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -45,7 +46,7 @@ public class GuardController {
     // DEBUG
 
     @PostMapping
-    public ResponseEntity<GuardResponseDTO> createStudent(@RequestBody GuardRequestDTO request) {
+    public ResponseEntity<GuardResponseDTO> createGuard(@RequestBody GuardRequestDTO request) {
 
         Guard guard = Guard.builder()
                 .name(request.getName())
@@ -56,8 +57,6 @@ public class GuardController {
 
         GuardResponseDTO response = GuardResponseDTO.builder()
                 .id(guard.getId())
-                .name(guard.getName())
-                .pswd(guard.getPswd())
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
