@@ -81,6 +81,9 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.CREATED).body(newGuard);
         }
         catch (RuntimeException ex) {
+            if(ex.getMessage().equals("Invalid Credentials.")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
             return ResponseEntity.notFound().build();
         }
     }

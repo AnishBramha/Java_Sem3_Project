@@ -70,6 +70,9 @@ public class Admin {
 
     public Guard addGuard(GuardRequestDTO request) {
         /* TODO: Some checks here */
+        if (guardRepository.findByName(request.getName()).isPresent()) {
+            throw new RuntimeException("Guard Already Present!");
+        }
         Guard newGuard = new Guard();
         /* TODO: Set Fields and return*/
         newGuard.setName(request.getName());
