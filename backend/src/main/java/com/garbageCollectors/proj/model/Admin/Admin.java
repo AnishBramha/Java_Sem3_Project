@@ -5,7 +5,9 @@ import com.garbageCollectors.proj.controller.Admin.AdminResponseDTO;
 import com.garbageCollectors.proj.model.Guard.Guard;
 import com.garbageCollectors.proj.model.Guard.GuardRepo;
 import com.garbageCollectors.proj.model.Student.StudentRepo;
+import com.garbageCollectors.proj.service.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +36,10 @@ public class Admin {
     private GuardRepo guardRepository;
 
 //    TO be done later
-//    @Autowired
-//    private PasswordEncoder encoder
+
+    @Autowired
+    private JWTService jwtService;
+
 
     public AdminResponseDTO authenticateAdmin(@RequestBody AdminRequestDTO request) {
         /*TODO: Login and Validation to be done here and token*/
