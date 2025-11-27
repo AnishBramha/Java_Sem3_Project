@@ -1,26 +1,57 @@
-import React, { useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 
 const StudentProfile = () => {
-  const [profile] = useState({
-    name: 'Rahul Sharma',
-    email: 'rahul.sharma@iiitb.ac.in',
-    rollNumber: 'IMT2021001'
-  })
+  const profile = JSON.parse(localStorage.getItem('userProfile'))
+ 
+
 
   const [phoneNumbers, setPhoneNumbers] = useState([]) // Start empty
+
+  useEffect(() => {
+    fetch("/api/student/getPhoneNumbers", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+    .then(res => res.json())
+    .then(data => {
+      setPhoneNumbers(data.phoneNumbers || [])
+    })  
+  }, [])
 
   const [newPhone, setNewPhone] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
 
-  const handleAddPhone = () => {
+  const handleAddPhone = async() => {
     if (newPhone.length === 10 && phoneNumbers.length < 5) {
+      
+      const result= await fetch("/api/student/addPhoneNumbers", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ phoneNumbers: [newPhone]
+         }),
+      }) 
+
       setPhoneNumbers([...phoneNumbers, newPhone])
       setNewPhone('')
       setShowAddForm(false)
     }
   }
 
-  const handleRemovePhone = (index) => {
+  const handleRemovePhone = async(index) => {
+    await fetch("/api/student/deletePhoneNumbers", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify([phoneNumbers[index]]),
+    })
     setPhoneNumbers(phoneNumbers.filter((_, i) => i !== index))
   }
 
@@ -36,7 +67,7 @@ const StudentProfile = () => {
       <div className="bg-white rounded-xl shadow-md border border-purple-100 overflow-hidden">
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-5 text-white flex items-center gap-4">
           <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold border-2 border-white/30">
-            {profile.name.charAt(0)}
+            {profile.name.charAt(0).toUpperCase()}
           </div>
           <div>
             <h3 className="text-xl font-bold">{profile.name}</h3>
@@ -63,7 +94,7 @@ const StudentProfile = () => {
             </div>
             <div className="flex-1">
               <p className="text-xs text-gray-500 font-medium">Roll Number</p>
-              <p className="text-sm font-semibold text-gray-900">{profile.rollNumber}</p>
+              <p className="text-sm font-semibold text-gray-900">{profile.roll}</p>
             </div>
           </div>
         </div>

@@ -11,6 +11,7 @@ public class PackageRequestDTO {
     private LocalDateTime deliveredTnD;
     private LocalDateTime receivedTnD;
     private String phoneNumber;
+    private String name;
     private String deliveryCompany;
     private String email;
 }

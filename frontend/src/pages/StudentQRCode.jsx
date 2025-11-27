@@ -8,7 +8,7 @@ export default function StudentQRCode() {
     roll: "UNKNOWN",
   };
 
-  const qrText = `ROLL:${profile.rollNumber}|NAME:${profile.name}`;
+  const qrText = "Email:" + profile.email;
 
   
   return (
@@ -34,7 +34,7 @@ export default function StudentQRCode() {
 
         <div className="text-center">
           <p className="font-bold text-gray-800 text-lg">{profile.name}</p>
-          <p className="text-purple-700 font-semibold">{profile.rollNumber}</p>
+          <p className="text-purple-700 font-semibold">{profile.roll}</p>
         </div>
       </div>
 

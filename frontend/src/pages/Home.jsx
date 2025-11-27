@@ -36,7 +36,7 @@ const login = () => {
 
 
   const loginGuard = () => {
-    window.location.href = "/guard"
+    window.location.href = "/guard/login"
   }
 
   const loginAdmin = () => {

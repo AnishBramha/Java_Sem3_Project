@@ -37,7 +37,7 @@ public class GuardController {
     }
 
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<GuardResponseDTO> login(@RequestBody GuardRequestDTO request) {
 
         Optional<Guard> maybeGuard = this.guardRepo.findByName(request.getName());
@@ -88,7 +88,7 @@ public class GuardController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         } catch (Exception e) {
-
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
         }
     }
@@ -102,20 +102,20 @@ public class GuardController {
             var claims = this.verifyToken(authHeader);
 
             if (claims.get("role").toString().equals("GUARD")) {
-
+                System.out.println(request.getName());
                 var newPackage = Package.builder()
                         .deliveryCompany(request.getDeliveryCompany())
                         .phoneNumber(request.getPhoneNumber())
+                        .Name(request.getName())
                         .status("Active")
-                        .deliveredTnD(request.getDeliveredTnD())
                         .build();
 
                 this.packageRepo.save(newPackage);
 
-                return ResponseEntity.ok().body("Package added at reception");
+                return ResponseEntity.ok().body("\"message\":\"Package added at reception\"");
             }
 
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\":\"Not Authorized\"}");
 
         } catch (Exception e) {
 

@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface StudentRepo extends MongoRepository<Student, String> {
 
     Optional<Student> findByEmail(String email);
+    Optional<Student> findByEmailIgnoreCase(String email);
 }
 
 

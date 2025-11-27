@@ -1,29 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { BrowserQRCodeReader } from "@zxing/library";
 
-export default function VerifyPackageModal({ onClose, onVerify }) {
-  const [parsed, setParsed] = useState(null);
+export default function VerifyPackageModal({ pkg, onClose, onVerify }) {
+  const [email, setEmail] = useState("");
   const [raw, setRaw] = useState("");
 
-  // Parse "ROLL:IMT2021010|NAME:Rahul Sharma"
+  // Parse QR content: "Email:<email>"
   const parseQR = (text) => {
-    try {
-      const obj = {};
-      text.split("|").forEach((p) => {
-        const [key, val] = p.split(":");
-        obj[key] = val;
-      });
-      return obj;
-    } catch (err) {
-      return null;
+    if (text.startsWith("Email:")) {
+      return text.replace("Email:", "").trim();
     }
+    return null;
   };
 
   useEffect(() => {
     const reader = new BrowserQRCodeReader();
 
     reader.decodeFromVideoDevice(
-      undefined,          // auto-select back camera
+      undefined,
       "qr-video",
       (result, err) => {
         if (result) {
@@ -31,11 +25,11 @@ export default function VerifyPackageModal({ onClose, onVerify }) {
           console.log("QR RAW:", text);
           setRaw(text);
 
-          const parsedData = parseQR(text);
-          console.log("PARSED:", parsedData);
+          const extractedEmail = parseQR(text);
+          console.log("PARSED EMAIL:", extractedEmail);
 
-          if (parsedData?.ROLL && parsedData?.NAME) {
-            setParsed(parsedData);
+          if (extractedEmail) {
+            setEmail(extractedEmail);
           }
         }
       }
@@ -44,13 +38,44 @@ export default function VerifyPackageModal({ onClose, onVerify }) {
     return () => reader.reset();
   }, []);
 
+  const confirmPickup = async () => {
+    const token = localStorage.getItem("token");
+
+    const body = {
+      id: pkg.id,
+      email: email
+    };
+
+    try {
+      const res = await fetch("/api/guard/scan", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        alert("Verification failed!");
+        return;
+      }
+
+      onVerify(pkg);  // update UI
+      onClose();
+    } catch (err) {
+      console.error(err);
+      alert("Error verifying pickup");
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center p-4 pt-10">
       <div className="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden">
 
         {/* HEADER */}
         <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="text-lg font-bold text-purple-700">Verify Student</h2>
+          <h2 className="text-lg font-bold text-purple-700">Verify Pickup</h2>
           <button onClick={onClose} className="text-gray-600 text-xl">✕</button>
         </div>
 
@@ -65,27 +90,18 @@ export default function VerifyPackageModal({ onClose, onVerify }) {
           />
         </div>
 
-        {/* PARSED RESULT */}
+        {/* PARSED EMAIL */}
         <div className="px-4 pb-4">
-          {!parsed && (
+          {!email && (
             <p className="text-center text-gray-500">
               Point camera at student's QR code
             </p>
           )}
 
-          {parsed && (
-            <div className="bg-purple-50 p-4 rounded-xl border border-purple-200 space-y-2">
-
-              <div>
-                <p className="text-xs text-gray-500">Roll Number</p>
-                <p className="font-bold text-purple-700 text-lg">{parsed.ROLL}</p>
-              </div>
-
-              <div>
-                <p className="text-xs text-gray-500">Student Name</p>
-                <p className="font-bold text-gray-900 text-lg">{parsed.NAME}</p>
-              </div>
-
+          {email && (
+            <div className="bg-purple-50 p-4 rounded-xl border border-purple-200 space-y-1">
+              <p className="text-xs text-gray-500">Scanned Email</p>
+              <p className="font-bold text-purple-700 text-lg">{email}</p>
             </div>
           )}
         </div>
@@ -100,8 +116,8 @@ export default function VerifyPackageModal({ onClose, onVerify }) {
           </button>
 
           <button
-            disabled={!parsed}
-            onClick={() => onVerify(parsed)}
+            disabled={!email}
+            onClick={confirmPickup}
             className="px-4 py-2 bg-green-600 text-white rounded-lg disabled:bg-green-300"
           >
             Confirm Pickup

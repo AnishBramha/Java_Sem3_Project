@@ -1,42 +1,78 @@
 import React, { useState } from 'react'
+import { useEffect } from 'react';
 
 const StudentMyPackages = () => {
   // Sample package data
-  const [packages] = useState([
-    {
-      id: 'PKG-2024-001',
-      recipientName: 'Rahul Sharma',
-      phoneNumber: '+91 98765 43210',
-      deliveryDate: '2024-11-10',
-      dueDate: '2024-11-17',
-      courier: 'Amazon'
-    },
-    {
-      id: 'PKG-2024-002',
-      recipientName: 'Priya Patel',
-      phoneNumber: '+91 87654 32109',
-      deliveryDate: '2024-11-12',
-      dueDate: '2024-11-19',
-      courier: 'Flipkart'
-    },
-    {
-      id: 'PKG-2024-003',
-      recipientName: 'Amit Kumar',
-      phoneNumber: '+91 76543 21098',
-      deliveryDate: '2024-11-14',
-      dueDate: '2024-11-21',
-      courier: 'BlueDart'
-    },
-    {
-      id: 'PKG-2024-004',
-      recipientName: 'Sneha Reddy',
-      phoneNumber: '+91 65432 10987',
-      deliveryDate: '2024-10-15',
-      dueDate: '2024-10-22',
-      courier: 'Delhivery'
-    },
-   
-  ])
+    const [packages, setPackages] = useState([]);
+
+  useEffect(() => {
+    async function loadPackages() {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch("/api/package/myActive", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!res.ok) {
+          console.error("Failed to fetch packages");
+          return;
+        }
+
+        const data = await res.json();
+
+        const formatted = data.map((pkg) => {
+        const deliveryDateObj = pkg.deliveredTnD ? new Date(pkg.deliveredTnD) : null;
+
+        const deliveryDate = deliveryDateObj
+          ? deliveryDateObj.toLocaleString("en-IN", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            })
+          : "N/A";
+
+        let dueDate = "N/A";
+        if (deliveryDateObj) {
+          const temp = new Date(deliveryDateObj);
+          temp.setDate(temp.getDate() + 7);
+
+          dueDate = temp.toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          });
+        }
+
+        return {
+          id: pkg.id,
+          recipientName: "You",
+          phoneNumber: pkg.phoneNumber,
+          deliveryDate,
+          dueDate,
+          courier: pkg.deliveryCompany,
+        };
+      });
+
+
+        setPackages(formatted);
+      } catch (err) {
+        console.error("Error fetching packages:", err);
+      }
+    }
+
+    loadPackages();
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -106,7 +142,10 @@ const StudentMyPackages = () => {
                       {new Date(pkg.deliveryDate).toLocaleDateString('en-IN', { 
                         day: '2-digit', 
                         month: 'short',
-                        year: 'numeric'
+                        year: 'numeric',
+                        minute: '2-digit',
+                        hour: '2-digit',
+                        hour12: false
                       })}
                     </p>
                   </div>
@@ -116,7 +155,10 @@ const StudentMyPackages = () => {
                       {new Date(pkg.dueDate).toLocaleDateString('en-IN', { 
                         day: '2-digit', 
                         month: 'short',
-                        year: 'numeric'
+                        year: 'numeric',
+                        minute: '2-digit',
+                        hour: '2-digit',
+                        hour12: false 
                       })}
                     </p>
                   </div>

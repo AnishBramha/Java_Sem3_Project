@@ -1,7 +1,9 @@
 package com.garbageCollectors.proj.controller.Package;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -14,4 +16,10 @@ public class PackageResponseDTO {
     private LocalDateTime receivedTnD;
     private String phoneNumber;
     private String deliveryCompany;
+    private String name;
+
+    private String receivedEmail;
+
+    private String receivedName;
+
 }

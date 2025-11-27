@@ -20,8 +20,10 @@ public class Package {
     private String id;
 
     private String status;
-    private LocalDateTime deliveredTnD;
+    @Builder.Default
+    private LocalDateTime deliveredTnD=LocalDateTime.now();
     private LocalDateTime receivedTnD;
+    private String Name;
     private String phoneNumber;
     private String deliveryCompany;
     private String receivedEmail;
