@@ -12,6 +12,8 @@ import StudentProfile from "./pages/StudentProfile.jsx"
 import Logout from "./pages/Logout.jsx"
 import GuardActivePackages from "./pages/GuardActivePackages.jsx"
 import GuardOldPackages from "./pages/GuardOldPackages.jsx"
+import GuardReturnPackages from "./pages/GuardReturnPackages.jsx"
+import StudentReturnPackages from "./pages/StudentReturnPackages.jsx"
 import StudentQRCode from "./pages/StudentQRCode.jsx"
 
 export const App = () => {
@@ -26,6 +28,7 @@ export const App = () => {
           <Route path="OldPackages" element={<StudentOldPackages />} />
           <Route path="QRCode" element={<StudentQRCode />} />
           <Route path="profile" element={<StudentProfile />} />
+          <Route path="ReturnPackages" element={<StudentReturnPackages />} />
         </Route>
 
         <Route path="/admin" element={<AdminDashboard />} />
@@ -35,6 +38,7 @@ export const App = () => {
           <Route path="" element={<GuardActivePackages />} />
           <Route path="ActivePackages" element={<GuardActivePackages />} />
           <Route path="OldPackages" element={<GuardOldPackages />} />
+          <Route path="ReturnPackages" element={<GuardReturnPackages />} />
         </Route>
         
         <Route path="/admin/login" element={<AdminLogin />} />

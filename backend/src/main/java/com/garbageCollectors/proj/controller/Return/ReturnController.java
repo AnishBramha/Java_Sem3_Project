@@ -3,6 +3,7 @@ package com.garbageCollectors.proj.controller.Return;
 import com.garbageCollectors.proj.controller.Student.StudentResponseDTO;
 import com.garbageCollectors.proj.model.Return.Return;
 import com.garbageCollectors.proj.model.Return.ReturnRepo;
+import com.garbageCollectors.proj.model.Student.StudentRepo;
 import com.garbageCollectors.proj.service.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/return")
@@ -19,6 +22,7 @@ import java.time.LocalDateTime;
 public class ReturnController {
     private final ReturnRepo returnRepo;
     private final JWTService jwtService;
+    private final StudentRepo studentRepo;
     @PostMapping("/add")
     public ResponseEntity<?> addReturnItem(@RequestHeader ("Authorization") String authHeader, @RequestBody ReturnRequestDTO request){
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -97,6 +101,9 @@ public class ReturnController {
             if (!role.equals("GUARD")) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("");
             }
+
+            System.out.println(id);
+
             Return returnPackage = returnRepo.findById(id).orElse(null);
             if(returnPackage!=null) {
                 returnPackage.setStatus("returned");
@@ -137,6 +144,92 @@ public class ReturnController {
            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("");
         }
     }
+
+    @GetMapping("/my")
+    public ResponseEntity<?> getMyReturns(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token");
+        }
+
+        try {
+            String token = authHeader.substring(7);
+            Jws<Claims> data = jwtService.verifyToken(token);
+            Claims claims = data.getBody();
+
+            if (!claims.get("role").equals("STUDENT")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            String email = claims.getSubject();
+
+
+            var student = studentRepo.findByEmail(email).orElse(null);
+            if (student == null) return ResponseEntity.notFound().build();
+
+            List<Return> list = new ArrayList<>();
+
+            for (String mobile : student.getPhoneNumbers()) {
+                list.addAll(returnRepo.findByPhoneNumbers(mobile));
+            }
+
+            var response = list.stream().map(r ->
+                    ReturnResponseDTO.builder()
+                            .id(r.getId())
+                            .status(r.getStatus())
+                            .email(r.getEmail())
+                            .name(r.getName())
+                            .phoneNumbers(r.getPhoneNumbers())
+                            .timestamp(r.getTimestamp())
+                            .deliveryCompany(r.getDeliveryCompany())
+                            .build()
+            ).toList();
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("");
+        }
+    }
+
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllReturns(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing token");
+        }
+
+        try {
+            String token = authHeader.substring(7);
+            Jws<Claims> data = jwtService.verifyToken(token);
+            Claims claims = data.getBody();
+            String role = claims.get("role").toString();
+
+            if (!role.equals("GUARD")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("");
+            }
+
+            var list = returnRepo.findAll();
+
+            var response = list.stream().map(r ->
+                    ReturnResponseDTO.builder()
+                            .id(r.getId())
+                            .status(r.getStatus())
+                            .email(r.getEmail())
+                            .name(r.getName())
+                            .phoneNumbers(r.getPhoneNumbers())
+                            .timestamp(r.getTimestamp())
+                            .deliveryCompany(r.getDeliveryCompany())
+                            .build()
+            ).toList();
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("");
+        }
+    }
+
+
 
     @GetMapping("/search")
     public ResponseEntity<?> findReturnPackage(@RequestHeader("Authorization") String authHeader,@RequestBody String id){

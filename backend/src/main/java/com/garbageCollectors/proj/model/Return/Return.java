@@ -1,6 +1,7 @@
 package com.garbageCollectors.proj.model.Return;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.micrometer.observation.ObservationFilter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,4 +27,7 @@ public class Return {
     private String status;
     private LocalDateTime timestamp;
     private String deliveryCompany;
+
+
+
 }

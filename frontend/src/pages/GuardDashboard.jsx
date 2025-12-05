@@ -9,7 +9,8 @@ export default function GuardDashboard() {
   const navItems = [
     
     { to: "ActivePackages", icon: "📦", label: "Active Packages" },
-    { to: "OldPackages", icon: "📁", label: "Old Packages" }
+    { to: "OldPackages", icon: "📁", label: "Old Packages" },
+    { to: "ReturnPackages", icon: " 🔄", label: "Return Packages" },
   ]
 
   const isActive = (route) => {

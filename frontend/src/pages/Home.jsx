@@ -40,7 +40,7 @@ const login = () => {
   }
 
   const loginAdmin = () => {
-    window.location.href = "/admin"
+    window.location.href = "/admin/login"
   }
 
   return (

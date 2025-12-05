@@ -59,7 +59,7 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> adminLogin(@RequestHeader("Authorization") String authHeader, @RequestBody AdminRequestDTO request) {
+    public ResponseEntity<?> adminLogin( @RequestBody AdminRequestDTO request) {
 
         try {
             AdminResponseDTO response = adminService.authenticateAdmin(request);

@@ -35,6 +35,7 @@ export default function StudentDashboard() {
   const navItems = [
     { to: "MyPackages", icon: "📦", label: "My Packages"},
     { to: "OldPackages", icon: "📁", label: "Old Packages" },
+    {to:"ReturnPackages", icon: "↩️", label: "Return Packages" },
     { to: "profile", icon: "👤", label: "Profile" },
     {to: "QRCode", icon: "⛶", label: "My QR Code" },
   ]

@@ -9,8 +9,7 @@ import java.util.List;
 @Data
 @Builder
 public class ReturnRequestDTO {
-    private String email;
-    private LocalDateTime timestamp;
+
     private String deliveryCompany;
     private String name;
     private List<String> phoneNumbers;
