@@ -64,6 +64,13 @@ const StudentMyPackages = () => {
         };
       });
 
+      // Sort by deliveryDate descending
+      formatted.sort((a, b) => {
+        const dateA = new Date(a.deliveryDate);
+        const dateB = new Date(b.deliveryDate);
+        return dateB - dateA;
+      });
+
 
         setPackages(formatted);
       } catch (err) {
